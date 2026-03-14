@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>对话框示例</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* 打开对话框按钮 */
+    .open-btn {
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .open-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    /* 对话框遮罩层 */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 1000;
+    }
+
+    .dialog-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 对话框主体 */
+    .dialog {
+      background: #fff;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 420px;
+      padding: 32px;
+      transform: scale(0.8) translateY(20px);
+      transition: transform 0.3s ease-out;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .dialog-overlay.active .dialog {
+      transform: scale(1) translateY(0);
+    }
+
+    /* 对话框标题 */
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .dialog-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .dialog-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #f0f0f0;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      font-size: 18px;
+      color: #666;
+    }
+
+    .dialog-close:hover {
+      background: #e0e0e0;
+    }
+
+    /* 对话框内容 */
+    .dialog-body {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* 对话框底部按钮 */
+    .dialog-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .dialog-btn {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dialog-btn-cancel {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .dialog-btn-cancel:hover {
+      background: #e0e0e0;
+    }
+
+    .dialog-btn-confirm {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+
+    .dialog-btn-confirm:hover {
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 打开对话框的按钮 -->
+  <button class="open-btn" id="openDialog">打开对话框</button>
+
+  <!-- 对话框 -->
+  <div class="dialog-overlay" id="dialogOverlay">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h2 class="dialog-title">确认操作</h2>
+        <button class="dialog-close" id="closeDialog">✕</button>
+      </div>
+      <div class="dialog-body">
+        <p>您确定要执行此操作吗？此操作无法撤销。</p>
+      </div>
+      <div class="dialog-footer">
+        <button class="dialog-btn dialog-btn-cancel" id="cancelBtn">取消</button>
+        <button class="dialog-btn dialog-btn-confirm" id="confirmBtn">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 获取DOM元素
+    const openBtn = document.getElementById('openDialog');
+    const dialogOverlay = document.getElementById('dialogOverlay');
+    const closeBtn = document.getElementById('closeDialog');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const confirmBtn = document.getElementById('confirmBtn');
+
+    // 打开对话框
+    openBtn.addEventListener('click', () => {
+      dialogOverlay.classList.add('active');
+    });
+
+    // 关闭对话框函数
+    function closeDialog() {
+      dialogOverlay.classList.remove('active');
+    }
+
+    // 点击关闭按钮
+    closeBtn.addEventListener('click', closeDialog);
+
+    // 点击取消按钮
+    cancelBtn.addEventListener('click', closeDialog);
+
+    // 点击确认按钮
+    confirmBtn.addEventListener('click', () => {
+      alert('操作已确认！');
+      closeDialog();
+    });
+
+    // 点击遮罩层关闭（点击对话框本身不关闭）
+    dialogOverlay.addEventListener('click', (e) => {
+      if (e.target === dialogOverlay) {
+        closeDialog();
+      }
+    });
+
+    // 按ESC键关闭
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dialogOverlay.classList.contains('active')) {
+        closeDialog();
+      }
+    });
+  </script>
+
+</body>
+</html>
