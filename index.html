@@ -1,84 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>子建的个人网站</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
 
-```html
----
-layout: default
-title: Home
-notitle: true
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
 
-# groups of columns of {roles: list, width: num, image: bool}
-role-tables:
-- - roles: [faculty, postdoc, staff]
-    width: 4
-    image: true
-  - roles: [grad]
-    width: 8
-    image: true
-- - roles: [collab, ugrad, ugrad-alum]
-    width: 5
-    image: false
-  - roles: [alum]
-    width: 7
-    image: false
+    /* 卡片样式 */
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
 
----
+    /* 个人头像 */
+    .profile {
+      text-align: center;
+      padding: 30px;
+    }
 
-<div class="jumbotron">
-    <p>
-        <b>肖航课题组</b>开发了首个<b>基于字符串的可逆晶体表示法: SLICES</b>,实现了生成式AI驱动的<b>Text2Crystal</b>。SLICES有望成为AI驱动的晶体材料逆向设计的标准工具,即<b>晶体材料的"SMILES"</b>。 
-    </p>
-    <p>
-        The <b>XIAO Research Group</b> developed the first <b>string-based invertible, invariant crystallographic representation: SLICES</b>, achieving <b>Text2Crystal</b> powered by generative AI. SLICES has the potential to become a standard tool for <i> in-silico </i> materials discovery, i.e. "SMILES" for crystal structures.
-    </p>
-</div>
+    .avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      color: white;
+      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+    }
 
-<section>
-    <h2>News</h2>
-    <ul class="news list-unstyled">
-        {% for post in site.posts limit: site.front_page_news %}
-            {% include news-item.html item=post %}
-        {% endfor %}
-    </ul>
-    {% assign numposts = site.posts | size %}
-    {% if numposts >= 1 %}
-        <p>
-            <span class="fa fa-fw fa-history"></span>
-            <a href="{{ site.base }}/blog.html">Older posts&hellip;</a>
-        </p>
-    {% endif %}
-</section>
+    .name {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #2d3748;
+    }
 
-<script
-type="module"
-src="https://gradio.s3-us-west-2.amazonaws.com/4.41.0/gradio.js"
-></script>
+    .title {
+      font-size: 16px;
+      color: #718096;
+      margin-bottom: 16px;
+    }
 
-<gradio-app src="https://lindir-oh-ye.hf.space" theme_mode="light"></gradio-app>
+    .bio {
+      color: #4a5568;
+      font-size: 15px;
+    }
 
-<div id="people">
-    <h2>People</h2>
-    {% for role-table in page.role-tables %}
-        <section class="people row justify-content-between">
-            {% for role-column in role-table %}
-                <div class="col-md-{{ role-column.width }}">
-                    {% for role in role-column.roles %}
-                        {% include role-people.html role=role image=role-column.image %}
-                    {% endfor %}
-                </div>
-            {% endfor %}
-        </section>
-    {% endfor %}
-</div>
-```
+    /* 社交链接 */
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 24px;
+    }
 
----
+    .social-link {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #f7fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 20px;
+      transition: all 0.3s;
+    }
 
-**操作步骤：**
+    .social-link:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-3px);
+    }
 
-1. 去 GitHub：https://github.com/Lindir003/lindir003-.github.io
-2. 点 `index.html` 文件
-3. 点右上角 **铅笔图标（Edit）**
-4. 全部删除，粘贴上面的代码
-5. 点 **Commit changes**
+    /* 区块标题 */
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #2d3748;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-等 1 分钟，网站 `lindir003-.github.io` 就能看到你的 AI 应用了！
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 2px;
+    }
+
+    /* 关于我 */
+    .about-list {
+      list-style: none;
+    }
+
+    .about-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2f7;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .about-list li:last-child {
+      border-bottom: none;
+    }
+
+    .about-icon {
+      font-size: 20px;
+    }
+
+    /* 技能标签 */
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skill-tag {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+      border: 1px solid #667eea40;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #5a67d8;
+    }
+
+    /* 按钮 */
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    /* 对话框遮罩层 */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 1000;
+    }
+
+    .dialog-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 对话框主体 */
+    .dialog {
+      background: #fff;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 420px;
+      padding: 32px;
+      transform: scale(0.8) translateY(20px);
+      transition: transform 0.3s ease-out;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .dialog-overlay.active .dialog {
+      transform: scale(1) translateY(0);
+    }
+
+    /* 对话框标题 */
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .dialog-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .dialog-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #f0f0f0;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      font-size: 18px;
+      color: #666;
+    }
+
+    .dialog-close:hover {
+      background: #e0e0e0;
+    }
+
+    /* 对话框内容 */
+    .dialog-body {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .dialog-body input,
+    .dialog-body textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .dialog-body input:focus,
+    .dialog-body textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .dialog-body textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* 对话框底部按钮 */
+    .dialog-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .dialog-btn {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dialog-btn-cancel {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .dialog-btn-cancel:hover {
+      background: #e0e0e0;
+    }
+
+    .dialog-btn-confirm {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+
+    .dialog-btn-confirm:hover {
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    /* 页脚 */
+    footer {
+      text-align: center;
+      color: white;
+      padding: 20px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    /* 响应式 */
+    @media (max-width: 600px) {
+      .card {
+        padding: 24px;
+      }
+      
+      .avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+      }
+      
+      .name {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 个人资料卡片 -->
+    <div class="card profile">
+      <div class="avatar">👨‍💻</div>
+      <h1 class="name">子建</h1>
+      <p class="title">开发者 / 学生</p>
+      <p class="bio">
+        热爱编程与技术创新，专注于Web开发和AI应用。<br>
+        欢迎来到我的个人网站！
+      </p>
+      <div class="social-links">
+        <a href="https://github.com/Lindir003" class="social-link" title="GitHub">🐙</a>
+        <a href="https://huggingface.co/lindir" class="social-link" title="Hugging Face">🤗</a>
+        <a href="mailto:lindir003@example.com" class="social-link" title="Email">📧</a>
+      </div>
+    </div>
+
+    <!-- 关于我 -->
+    <div class="card">
+      <h2 class="section-title">关于我</h2>
+      <ul class="about-list">
+        <li>
+          <span class="about-icon">🎓</span>
+          <div>
+            <strong>教育背景</strong>
+            <p>计算机科学专业学生</p>
+          </div>
+        </li>
+        <li>
+          <span class="about-icon">💻</span>
+          <div>
+            <strong>技术方向</strong>
+            <p>Web开发 / 机器学习 / 前后端开发</p>
+          </div>
+        </li>
+        <li>
+          <span class="about-icon">🌐</span>
+          <div>
+            <strong>个人项目</strong>
+            <p>GitHub: github.com/Lindir003</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 技能 -->
+    <div class="card">
+      <h2 class="section-title">技能</h2>
+      <div class="skills">
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">Vue</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">AI/ML</span>
+      </div>
+    </div>
+
+    <!-- 联系方式 -->
+    <div class="card" style="text-align: center;">
+      <h2 class="section-title" style="justify-content: center;">联系我</h2>
+      <p style="color: #718096; margin-bottom: 24px;">
+        有项目合作或其他问题，欢迎联系我！
+      </p>
+      <button class="btn" id="openContactDialog">💬 留言给我</button>
+    </div>
+  </div>
+
+  <!-- 联系对话框 -->
+  <div class="dialog-overlay" id="dialogOverlay">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h2 class="dialog-title">留言给我</h2>
+        <button class="dialog-close" id="closeDialog">✕</button>
+      </div>
+      <div class="dialog-body">
+        <input type="text" id="nameInput" placeholder="你的名字">
+        <input type="email" id="emailInput" placeholder="你的邮箱">
+        <textarea id="messageInput" placeholder="想对我说什么？"></textarea>
+      </div>
+      <div class="dialog-footer">
+        <button class="dialog-btn dialog-btn-cancel" id="cancelBtn">取消</button>
+        <button class="dialog-btn dialog-btn-confirm" id="confirmBtn">发送</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 子建的个人网站
+  </footer>
+
+  <script>
+    // 获取DOM元素
+    const openBtn = document.getElementById('openContactDialog');
+    const dialogOverlay = document.getElementById('dialogOverlay');
+    const closeBtn = document.getElementById('closeDialog');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const nameInput = document.getElementById('nameInput');
+    const emailInput = document.getElementById('emailInput');
+    const messageInput = document.getElementById('messageInput');
+
+    // 打开对话框
+    openBtn.addEventListener('click', () => {
+      dialogOverlay.classList.add('active');
+      nameInput.focus();
+    });
+
+    // 关闭对话框函数
+    function closeDialog() {
+      dialogOverlay.classList.remove('active');
+      // 清空表单
+      nameInput.value = '';
+      emailInput.value = '';
+      messageInput.value = '';
+    }
+
+    // 关闭按钮
+    closeBtn.addEventListener('click', closeDialog);
+    cancelBtn.addEventListener('click', closeDialog);
+
+    // 确认发送
+    confirmBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!name || !message) {
+        alert('请填写名字和留言内容！');
+        return;
+      }
+
+      alert(`感谢 "${name}" 的留言！\n\n内容: ${message}`);
+      closeDialog();
+    });
+
+    // 点击遮罩层关闭
+    dialogOverlay.addEventListener('click', (e) => {
+      if (e.target === dialogOverlay) {
+        closeDialog();
+      }
+    });
+
+    // 按ESC键关闭
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dialogOverlay.classList.contains('active')) {
+        closeDialog();
+      }
+    });
+  </script>
+
+</body>
+</html>
