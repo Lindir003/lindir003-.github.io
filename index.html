@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>子建的个人网站</title>
+  <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/6.5.1/gradio.js"></script>
   <style>
     * {
       margin: 0;
@@ -148,8 +149,8 @@
 
     .skill-tag {
       padding: 8px 16px;
-      background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
-      border: 1px solid #667eea40;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border: 1px solid rgba(102, 126, 234, 0.25);
       border-radius: 20px;
       font-size: 14px;
       color: #5a67d8;
@@ -202,11 +203,15 @@
       background: #fff;
       border-radius: 16px;
       width: 90%;
-      max-width: 420px;
-      padding: 32px;
+      max-width: 900px;
+      max-height: 80vh;
+      height: 80vh;
       transform: scale(0.8) translateY(20px);
       transition: transform 0.3s ease-out;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .dialog-overlay.active .dialog {
@@ -218,7 +223,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      padding: 20px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0;
     }
 
     .dialog-title {
@@ -246,68 +253,10 @@
       background: #e0e0e0;
     }
 
-    /* 对话框内容 */
-    .dialog-body {
-      color: #666;
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-
-    .dialog-body input,
-    .dialog-body textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: border-color 0.2s;
-      margin-bottom: 12px;
-    }
-
-    .dialog-body input:focus,
-    .dialog-body textarea:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-
-    .dialog-body textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    /* 对话框底部按钮 */
-    .dialog-footer {
-      display: flex;
-      gap: 12px;
-      justify-content: flex-end;
-    }
-
-    .dialog-btn {
-      padding: 10px 24px;
-      font-size: 14px;
-      font-weight: 500;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .dialog-btn-cancel {
-      background: #f0f0f0;
-      color: #666;
-    }
-
-    .dialog-btn-cancel:hover {
-      background: #e0e0e0;
-    }
-
-    .dialog-btn-confirm {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-    }
-
-    .dialog-btn-confirm:hover {
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    /* Gradio 容器 */
+    .gradio-container {
+      flex: 1;
+      overflow: hidden;
     }
 
     /* 页脚 */
@@ -334,9 +283,17 @@
       .name {
         font-size: 24px;
       }
+
+      .dialog {
+        width: 95%;
+        max-width: 95%;
+        height: 90vh;
+        max-height: 90vh;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <div class="container">
@@ -399,31 +356,25 @@
       </div>
     </div>
 
-    <!-- 联系方式 -->
+    <!-- 联系AI聊天 -->
     <div class="card" style="text-align: center;">
       <h2 class="section-title" style="justify-content: center;">联系我</h2>
       <p style="color: #718096; margin-bottom: 24px;">
-        有项目合作或其他问题，欢迎联系我！
+        有项目合作或其他问题，欢迎和我聊天！
       </p>
-      <button class="btn" id="openContactDialog">💬 留言给我</button>
+      <button class="btn" id="openChatBtn">💬 和我聊聊</button>
     </div>
   </div>
 
-  <!-- 联系对话框 -->
+  <!-- Gradio聊天对话框 -->
   <div class="dialog-overlay" id="dialogOverlay">
     <div class="dialog">
       <div class="dialog-header">
-        <h2 class="dialog-title">留言给我</h2>
+        <h2 class="dialog-title">AI 聊天</h2>
         <button class="dialog-close" id="closeDialog">✕</button>
       </div>
-      <div class="dialog-body">
-        <input type="text" id="nameInput" placeholder="你的名字">
-        <input type="email" id="emailInput" placeholder="你的邮箱">
-        <textarea id="messageInput" placeholder="想对我说什么？"></textarea>
-      </div>
-      <div class="dialog-footer">
-        <button class="dialog-btn dialog-btn-cancel" id="cancelBtn">取消</button>
-        <button class="dialog-btn dialog-btn-confirm" id="confirmBtn">发送</button>
+      <div class="gradio-container">
+        <gradio-app src="https://lindir-oh-ye.hf.space"></gradio-app>
       </div>
     </div>
   </div>
@@ -434,48 +385,22 @@
 
   <script>
     // 获取DOM元素
-    const openBtn = document.getElementById('openContactDialog');
+    const openBtn = document.getElementById('openChatBtn');
     const dialogOverlay = document.getElementById('dialogOverlay');
     const closeBtn = document.getElementById('closeDialog');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const confirmBtn = document.getElementById('confirmBtn');
-    const nameInput = document.getElementById('nameInput');
-    const emailInput = document.getElementById('emailInput');
-    const messageInput = document.getElementById('messageInput');
 
     // 打开对话框
     openBtn.addEventListener('click', () => {
       dialogOverlay.classList.add('active');
-      nameInput.focus();
     });
 
-    // 关闭对话框函数
+    // 关闭对话框
     function closeDialog() {
       dialogOverlay.classList.remove('active');
-      // 清空表单
-      nameInput.value = '';
-      emailInput.value = '';
-      messageInput.value = '';
     }
 
     // 关闭按钮
     closeBtn.addEventListener('click', closeDialog);
-    cancelBtn.addEventListener('click', closeDialog);
-
-    // 确认发送
-    confirmBtn.addEventListener('click', () => {
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim();
-      const message = messageInput.value.trim();
-
-      if (!name || !message) {
-        alert('请填写名字和留言内容！');
-        return;
-      }
-
-      alert(`感谢 "${name}" 的留言！\n\n内容: ${message}`);
-      closeDialog();
-    });
 
     // 点击遮罩层关闭
     dialogOverlay.addEventListener('click', (e) => {
