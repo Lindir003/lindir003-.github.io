@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>子建的个人网站</title>
-  <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/6.5.1/gradio.js"></script>
   <style>
     * {
       margin: 0;
@@ -26,7 +25,6 @@
       padding: 40px 20px;
     }
 
-    /* 卡片样式 */
     .card {
       background: white;
       border-radius: 20px;
@@ -35,7 +33,6 @@
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     }
 
-    /* 个人头像 */
     .profile {
       text-align: center;
       padding: 30px;
@@ -73,7 +70,6 @@
       font-size: 15px;
     }
 
-    /* 社交链接 */
     .social-links {
       display: flex;
       justify-content: center;
@@ -100,7 +96,6 @@
       transform: translateY(-3px);
     }
 
-    /* 区块标题 */
     .section-title {
       font-size: 20px;
       font-weight: 600;
@@ -119,7 +114,6 @@
       border-radius: 2px;
     }
 
-    /* 关于我 */
     .about-list {
       list-style: none;
     }
@@ -140,7 +134,6 @@
       font-size: 20px;
     }
 
-    /* 技能标签 */
     .skills {
       display: flex;
       flex-wrap: wrap;
@@ -156,24 +149,26 @@
       color: #5a67d8;
     }
 
-    /* AI聊天区域 */
-    .chat-card {
-      background: white;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-      min-height: 500px;
+    .chat-link {
+      display: inline-block;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      text-decoration: none;
     }
 
-    .chat-container {
-      height: 500px;
+    .chat-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
     }
 
-    .chat-container gradio-app {
-      height: 100%;
-    }
-
-    /* 页脚 */
     footer {
       text-align: center;
       color: white;
@@ -182,7 +177,6 @@
       opacity: 0.8;
     }
 
-    /* 响应式 */
     @media (max-width: 600px) {
       .card {
         padding: 24px;
@@ -196,10 +190,6 @@
       
       .name {
         font-size: 24px;
-      }
-
-      .chat-container {
-        height: 400px;
       }
     }
   </style>
@@ -268,11 +258,17 @@
     </div>
 
     <!-- AI聊天 -->
-    <div class="chat-card">
-      <h2 class="section-title">和我聊聊</h2>
-      <div class="chat-container">
-        <gradio-app src="https://lindir-oh-ye.hf.space"></gradio-app>
-      </div>
+    <div class="card" style="text-align: center;">
+      <h2 class="section-title" style="justify-content: center;">AI聊天</h2>
+      <p style="color: #718096; margin-bottom: 24px;">
+        点击下方按钮和我聊天～
+      </p>
+      <a href="https://huggingface.co/spaces/lindir/oh_ye" target="_blank" class="chat-link">
+        💬 开始聊天
+      </a>
+      <p style="color: #a0aec0; font-size: 12px; margin-top: 16px;">
+        将在Hugging Face上打开聊天界面
+      </p>
     </div>
   </div>
 
