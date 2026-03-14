@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>子建的个人网站</title>
+  <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/gradio.js"></script>
   <style>
     * {
       margin: 0;
@@ -30,7 +31,7 @@
       border-radius: 20px;
       padding: 40px;
       margin-bottom: 24px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     }
 
     .profile {
@@ -149,24 +150,11 @@
       color: #5a67d8;
     }
 
-    .chat-link {
-      display: inline-block;
-      padding: 14px 32px;
-      font-size: 16px;
-      font-weight: 600;
-      color: white;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-      text-decoration: none;
-    }
-
-    .chat-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    .chat-container {
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 500px;
+      background: #f7fafc;
     }
 
     footer {
@@ -190,6 +178,10 @@
       
       .name {
         font-size: 24px;
+      }
+
+      .chat-container {
+        min-height: 400px;
       }
     }
   </style>
@@ -258,17 +250,11 @@
     </div>
 
     <!-- AI聊天 -->
-    <div class="card" style="text-align: center;">
-      <h2 class="section-title" style="justify-content: center;">AI聊天</h2>
-      <p style="color: #718096; margin-bottom: 24px;">
-        点击下方按钮和我聊天～
-      </p>
-      <a href="https://huggingface.co/spaces/lindir/oh_ye" target="_blank" class="chat-link">
-        💬 开始聊天
-      </a>
-      <p style="color: #a0aec0; font-size: 12px; margin-top: 16px;">
-        将在Hugging Face上打开聊天界面
-      </p>
+    <div class="card">
+      <h2 class="section-title">和我聊聊</h2>
+      <div class="chat-container">
+        <gradio-app src="https://lindir-ye.hf.space"></gradio-app>
+      </div>
     </div>
   </div>
 
