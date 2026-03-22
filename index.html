@@ -117,16 +117,43 @@
       color: var(--text-primary);
     }
 
-    /* ── Hero: Cover + Intro ── */
+    /* ── Hero: Full-screen Cover ── */
     .hero {
       position: relative;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 80px;
-      padding: 120px 48px 80px;
       overflow: hidden;
+    }
+
+    /* Full-screen background image */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-bg-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.05);
+      transition: transform 8s ease;
+    }
+
+    .hero-bg-img.loaded {
+      transform: scale(1);
+    }
+
+    /* Gradient overlay for text readability */
+    .hero-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(5,5,7,0.7) 0%, rgba(5,5,7,0.3) 50%, rgba(5,5,7,0.6) 100%),
+        linear-gradient(to bottom, rgba(5,5,7,0.2) 0%, rgba(5,5,7,0.4) 100%);
     }
 
     /* Ambient beams */
@@ -138,6 +165,7 @@
       opacity: 0;
       transition: all 0.6s ease;
       pointer-events: none;
+      z-index: 1;
     }
 
     .hero-beam-left {
@@ -152,51 +180,13 @@
       top: 30%;
     }
 
-    /* Cover image */
-    .hero-cover {
-      position: relative;
-      flex-shrink: 0;
-      z-index: 2;
-    }
-
-    .hero-cover-glow {
-      position: absolute;
-      inset: -20px;
-      background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.3) 0%, transparent 70%);
-      filter: blur(30px);
-      z-index: -1;
-      animation: glow-pulse 4s ease-in-out infinite;
-    }
-
-    @keyframes glow-pulse {
-      0%, 100% { opacity: 0.6; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.05); }
-    }
-
-    .hero-cover-img {
-      width: 320px;
-      height: 400px;
-      object-fit: cover;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow:
-        0 30px 60px rgba(0,0,0,0.4),
-        0 0 60px rgba(168, 85, 247, 0.2);
-      transition: transform 0.6s ease, box-shadow 0.6s ease;
-    }
-
-    .hero-cover-img:hover {
-      transform: translateY(-8px);
-      box-shadow:
-        0 50px 80px rgba(0,0,0,0.5),
-        0 0 80px rgba(168, 85, 247, 0.35);
-    }
-
-    /* Hero text */
-    .hero-text {
+    /* Hero text - centered overlay */
+    .hero-content {
       position: relative;
       z-index: 2;
-      max-width: 480px;
+      text-align: left;
+      padding: 0 48px;
+      max-width: 600px;
     }
 
     .hero-avatar-line {
@@ -208,7 +198,7 @@
     }
 
     .hero-name {
-      font-size: clamp(56px, 7vw, 88px);
+      font-size: clamp(56px, 8vw, 96px);
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1;
@@ -217,11 +207,12 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom: 16px;
+      text-shadow: none;
     }
 
     .hero-role {
       font-size: 16px;
-      color: var(--neon-purple);
+      color: rgba(255,255,255,0.8);
       letter-spacing: 0.15em;
       text-transform: uppercase;
       font-weight: 600;
@@ -230,7 +221,7 @@
 
     .hero-bio {
       font-size: 15px;
-      color: var(--text-secondary);
+      color: rgba(255,255,255,0.65);
       line-height: 1.8;
       margin-bottom: 36px;
     }
@@ -246,19 +237,20 @@
       align-items: center;
       gap: 8px;
       padding: 10px 20px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
       border-radius: 12px;
-      color: var(--text-primary);
+      color: #fff;
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
       transition: all 0.3s;
+      backdrop-filter: blur(10px);
     }
 
     .hero-link:hover {
-      background: rgba(168, 85, 247, 0.15);
-      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(168, 85, 247, 0.25);
+      border-color: rgba(168, 85, 247, 0.5);
       transform: translateY(-2px);
     }
 
@@ -771,24 +763,21 @@
         grid-template-columns: 1fr;
       }
 
-      .hero {
-        flex-direction: column;
-        gap: 40px;
-        padding: 100px 24px 60px;
+      .hero-content {
+        padding: 0 24px;
         text-align: center;
       }
 
-      .hero-cover-img {
-        width: 240px;
-        height: 300px;
+      .hero-avatar-line {
+        margin: 0 auto 28px;
       }
 
       .hero-links {
         justify-content: center;
       }
 
-      .hero-avatar-line {
-        margin: 0 auto 28px;
+      .hero-bg-overlay {
+        background: linear-gradient(to bottom, rgba(5,5,7,0.3) 0%, rgba(5,5,7,0.6) 100%);
       }
 
       .game-iframe-wrap iframe {
@@ -961,22 +950,18 @@
 
   <!-- Hero with David Bust -->
   <section class="hero" id="hero">
-    <!-- Ambient light beams -->
+    <!-- Full-screen background image -->
+    <div class="hero-bg">
+      <img src="img/projects/1.jpg" alt="" class="hero-bg-img" />
+      <div class="hero-bg-overlay"></div>
+    </div>
+
+    <!-- Ambient beams -->
     <div class="hero-beam hero-beam-left" id="beamLeft"></div>
     <div class="hero-beam hero-beam-right" id="beamRight"></div>
 
-    <!-- Cover image -->
-    <div class="hero-cover">
-      <div class="hero-cover-glow"></div>
-      <img
-        src="img/projects/封面.jpg"
-        alt="子健"
-        class="hero-cover-img"
-      />
-    </div>
-
-    <!-- Hero text -->
-    <div class="hero-text">
+    <!-- Hero text - centered -->
+    <div class="hero-content">
       <div class="hero-avatar-line"></div>
       <h1 class="hero-name">子健</h1>
       <p class="hero-role">开发者 &nbsp;/&nbsp; AI &nbsp;/&nbsp; 创造者</p>
@@ -1178,7 +1163,7 @@
     const beamLeft = document.getElementById('beamLeft');
     const beamRight = document.getElementById('beamRight');
     const bgOrbs = document.querySelectorAll('.bg-orb');
-    const heroCoverImg = document.querySelector('.hero-cover-img');
+    const heroBgImg = document.querySelector('.hero-bg-img');
     const sections = document.querySelectorAll('[data-animate]');
 
     // Animate on scroll
@@ -1206,10 +1191,9 @@
         orb.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
       });
 
-      // Hero cover glow pulse on scroll
-      if (heroCoverImg) {
-        const glowOpacity = 0.5 + Math.sin(progress * Math.PI * 2) * 0.3;
-        heroCoverImg.parentElement.querySelector('.hero-cover-glow').style.opacity = glowOpacity;
+      // Hero background parallax
+      if (heroBgImg) {
+        heroBgImg.style.transform = `scale(${1 + progress * 0.05})`;
       }
 
       // Section content animations
@@ -1224,6 +1208,13 @@
 
     // Trigger once on load
     window.dispatchEvent(new Event('scroll'));
+
+    // Hero image load animation
+    const bgImg = document.querySelector('.hero-bg-img');
+    if (bgImg) {
+      bgImg.addEventListener('load', () => bgImg.classList.add('loaded'));
+      if (bgImg.complete) bgImg.classList.add('loaded');
+    }
 
     // ── Parallax for hero text ──
     const heroText = document.querySelector('.hero-text');
