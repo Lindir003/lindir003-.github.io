@@ -117,45 +117,22 @@
       color: var(--text-primary);
     }
 
-    /* ── Hero: David Bust ── */
+    /* ── Hero: Cover + Intro ── */
     .hero {
       position: relative;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 80px;
+      padding: 120px 48px 80px;
       overflow: hidden;
     }
 
-    .bust-container {
-      position: relative;
-      width: 320px;
-      height: 420px;
-      z-index: 2;
-    }
-
-    /* David bust - stylized SVG silhouette */
-    .bust-svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 60px rgba(168, 85, 247, 0.4));
-      transition: filter 0.3s ease;
-    }
-
-    .bust-highlight {
+    /* Ambient beams */
+    .hero-beam {
       position: absolute;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      pointer-events: none;
-      transition: all 0.5s ease;
-      mix-blend-mode: screen;
-    }
-
-    /* Light beam effects */
-    .light-beam {
-      position: absolute;
-      width: 4px;
+      width: 3px;
       height: 0;
       border-radius: 2px;
       opacity: 0;
@@ -163,30 +140,75 @@
       pointer-events: none;
     }
 
-    .light-beam-left {
+    .hero-beam-left {
       background: linear-gradient(to bottom, transparent, var(--neon-purple), transparent);
-      left: 50%;
-      top: 50%;
-      transform: translateX(-100px) rotate(-30deg);
+      left: 20%;
+      top: 30%;
     }
 
-    .light-beam-right {
+    .hero-beam-right {
       background: linear-gradient(to bottom, transparent, var(--neon-blue), transparent);
-      right: 50%;
-      top: 50%;
-      transform: translateX(100px) rotate(30deg);
+      right: 20%;
+      top: 30%;
+    }
+
+    /* Cover image */
+    .hero-cover {
+      position: relative;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+
+    .hero-cover-glow {
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.3) 0%, transparent 70%);
+      filter: blur(30px);
+      z-index: -1;
+      animation: glow-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .hero-cover-img {
+      width: 320px;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 30px 60px rgba(0,0,0,0.4),
+        0 0 60px rgba(168, 85, 247, 0.2);
+      transition: transform 0.6s ease, box-shadow 0.6s ease;
+    }
+
+    .hero-cover-img:hover {
+      transform: translateY(-8px);
+      box-shadow:
+        0 50px 80px rgba(0,0,0,0.5),
+        0 0 80px rgba(168, 85, 247, 0.35);
     }
 
     /* Hero text */
     .hero-text {
-      position: absolute;
-      bottom: 15%;
-      text-align: center;
-      z-index: 3;
+      position: relative;
+      z-index: 2;
+      max-width: 480px;
     }
 
-    .hero-text h1 {
-      font-size: clamp(48px, 8vw, 96px);
+    .hero-avatar-line {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+      border-radius: 2px;
+      margin-bottom: 28px;
+    }
+
+    .hero-name {
+      font-size: clamp(56px, 7vw, 88px);
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1;
@@ -197,11 +219,47 @@
       margin-bottom: 16px;
     }
 
-    .hero-text p {
-      font-size: 18px;
-      color: var(--text-secondary);
-      letter-spacing: 0.2em;
+    .hero-role {
+      font-size: 16px;
+      color: var(--neon-purple);
+      letter-spacing: 0.15em;
       text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .hero-bio {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 36px;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .hero-link:hover {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-2px);
     }
 
     .scroll-indicator {
@@ -713,9 +771,24 @@
         grid-template-columns: 1fr;
       }
 
-      .bust-container {
-        width: 220px;
+      .hero {
+        flex-direction: column;
+        gap: 40px;
+        padding: 100px 24px 60px;
+        text-align: center;
+      }
+
+      .hero-cover-img {
+        width: 240px;
         height: 300px;
+      }
+
+      .hero-links {
+        justify-content: center;
+      }
+
+      .hero-avatar-line {
+        margin: 0 auto 28px;
       }
 
       .game-iframe-wrap iframe {
@@ -888,77 +961,43 @@
 
   <!-- Hero with David Bust -->
   <section class="hero" id="hero">
-    <div class="bust-container">
-      <!-- Stylized David bust SVG -->
-      <svg class="bust-svg" viewBox="0 0 320 420" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="bustGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#e2e8f0;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#cbd5e1;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#94a3b8;stop-opacity:1" />
-          </linearGradient>
-          <linearGradient id="shadowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#475569;stop-opacity:0.8" />
-            <stop offset="100%" style="stop-color:#1e293b;stop-opacity:0.9" />
-          </linearGradient>
-          <linearGradient id="neonStroke" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#a855f7" />
-            <stop offset="50%" style="stop-color:#3b82f6" />
-            <stop offset="100%" style="stop-color:#ec4899" />
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
+    <!-- Ambient light beams -->
+    <div class="hero-beam hero-beam-left" id="beamLeft"></div>
+    <div class="hero-beam hero-beam-right" id="beamRight"></div>
 
-        <!-- Pedestal -->
-        <rect x="80" y="360" width="160" height="50" rx="4" fill="url(#shadowGrad)" />
-        <rect x="80" y="360" width="160" height="3" rx="1" fill="url(#neonStroke)" filter="url(#glow)" opacity="0.6" />
-
-        <!-- Neck -->
-        <path d="M130 300 L130 360 L190 360 L190 300" fill="url(#bustGrad)" />
-
-        <!-- Shoulders hint -->
-        <ellipse cx="160" cy="330" rx="100" ry="30" fill="url(#shadowGrad)" />
-
-        <!-- Head - David style oval -->
-        <ellipse cx="160" cy="160" rx="75" ry="100" fill="url(#bustGrad)" />
-
-        <!-- Hair - David's iconic curls -->
-        <g fill="#94a3b8">
-          <circle cx="105" cy="110" r="22" />
-          <circle cx="125" cy="85" r="24" />
-          <circle cx="155" cy="72" r="22" />
-          <circle cx="185" cy="78" r="20" />
-          <circle cx="205" cy="98" r="22" />
-          <circle cx="215" cy="122" r="20" />
-          <circle cx="95" cy="135" r="18" />
-          <circle cx="225" cy="140" r="18" />
-          <circle cx="118" cy="105" r="20" />
-          <circle cx="198" cy="100" r="20" />
-        </g>
-
-        <!-- Face features -->
-        <ellipse cx="130" cy="150" rx="8" ry="5" fill="#64748b" opacity="0.6" /> <!-- left eye hint -->
-        <ellipse cx="190" cy="150" rx="8" ry="5" fill="#64748b" opacity="0.6" /> <!-- right eye hint -->
-        <path d="M145 185 Q160 195 175 185" stroke="#94a3b8" stroke-width="2" fill="none" opacity="0.5" /> <!-- nose hint -->
-
-        <!-- Dynamic light overlay - changes with scroll -->
-        <ellipse id="lightOverlay" cx="160" cy="160" rx="75" ry="100" fill="url(#bustGrad)" opacity="0.3" style="mix-blend-mode: screen;" />
-      </svg>
-
-      <!-- Light beams -->
-      <div class="light-beam light-beam-left" id="beamLeft"></div>
-      <div class="light-beam light-beam-right" id="beamRight"></div>
+    <!-- Cover image -->
+    <div class="hero-cover">
+      <div class="hero-cover-glow"></div>
+      <img
+        src="img/projects/封面.jpg"
+        alt="子健"
+        class="hero-cover-img"
+      />
     </div>
 
+    <!-- Hero text -->
     <div class="hero-text">
-      <h1>子健</h1>
-      <p>开发者 · AI · 创造者</p>
+      <div class="hero-avatar-line"></div>
+      <h1 class="hero-name">子健</h1>
+      <p class="hero-role">开发者 &nbsp;/&nbsp; AI &nbsp;/&nbsp; 创造者</p>
+      <p class="hero-bio">
+        计算机科学专业，热衷于 Web 开发与 AI 应用。<br>
+        在数字与代码的世界里持续探索。
+      </p>
+      <div class="hero-links">
+        <a href="https://github.com/Lindir003" class="hero-link" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://huggingface.co/lindir" class="hero-link" target="_blank">
+          🤗 Hugging Face
+        </a>
+        <a href="mailto:719075998@qq.com" class="hero-link">
+          📧 邮箱
+        </a>
+      </div>
     </div>
 
     <div class="scroll-indicator">
@@ -1136,31 +1175,17 @@
 
   <script>
     // ── Scroll-driven animations ──
-    const lightOverlay = document.getElementById('lightOverlay');
     const beamLeft = document.getElementById('beamLeft');
     const beamRight = document.getElementById('beamRight');
     const bgOrbs = document.querySelectorAll('.bg-orb');
-    const bgOrb3 = document.querySelector('.bg-orb-3');
-    const bustSvg = document.querySelector('.bust-svg');
+    const heroCoverImg = document.querySelector('.hero-cover-img');
     const sections = document.querySelectorAll('[data-animate]');
-
-    function lerp(a, b, t) {
-      return a + (b - a) * t;
-    }
 
     // Animate on scroll
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       const maxScroll = window.innerHeight * 2;
       const progress = Math.min(scrollY / maxScroll, 1);
-
-      // Light overlay shifts with scroll
-      const offsetX = Math.sin(progress * Math.PI * 3) * 30;
-      const offsetY = Math.cos(progress * Math.PI * 2) * 20;
-      if (lightOverlay) {
-        lightOverlay.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-        lightOverlay.style.opacity = 0.2 + Math.sin(progress * Math.PI) * 0.3;
-      }
 
       // Light beams intensity
       const beamOpacity = Math.max(0, Math.sin(progress * Math.PI * 2 - 0.5)) * 0.8;
@@ -1181,13 +1206,10 @@
         orb.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
       });
 
-      // Bust glow
-      if (bustSvg) {
-        const glowIntensity = 40 + Math.sin(progress * Math.PI * 2) * 30;
-        const glowColor = progress < 0.5
-          ? `rgba(168, 85, 247, ${0.3 + progress * 0.2})`
-          : `rgba(59, 130, 246, ${0.3 + (1-progress) * 0.2})`;
-        bustSvg.style.filter = `drop-shadow(0 0 ${glowIntensity}px ${glowColor})`;
+      // Hero cover glow pulse on scroll
+      if (heroCoverImg) {
+        const glowOpacity = 0.5 + Math.sin(progress * Math.PI * 2) * 0.3;
+        heroCoverImg.parentElement.querySelector('.hero-cover-glow').style.opacity = glowOpacity;
       }
 
       // Section content animations
