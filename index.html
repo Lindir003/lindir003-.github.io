@@ -648,8 +648,45 @@
       text-transform: uppercase;
     }
 
-    .game-hint span {
-      color: var(--neon-purple);
+    .game-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pixel-key {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 6px;
+      background: #1a1a2e;
+      border: 2px solid #3a3a5e;
+      border-bottom-width: 4px;
+      border-radius: 6px;
+      color: #e0e0ff;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Courier New', monospace;
+      box-shadow:
+        0 0 8px rgba(168, 85, 247, 0.3),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      text-shadow: 0 0 6px rgba(168, 85, 247, 0.8);
+    }
+
+    .hint-text {
+      color: #666;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hint-sep {
+      color: #444;
+      font-size: 14px;
     }
 
     /* ═══════════════════════════════════════════
@@ -1060,7 +1097,17 @@
       </div>
 
       <p class="game-hint">
-        <span>↑↓←→</span> 移动 &nbsp;·&nbsp; <span>X</span> 跳跃 &nbsp;·&nbsp; <span>C</span> 冲刺
+        <span class="pixel-key">↑</span>
+        <span class="pixel-key">↓</span>
+        <span class="pixel-key">←</span>
+        <span class="pixel-key">→</span>
+        <span class="hint-text">移动</span>
+        <span class="hint-sep">·</span>
+        <span class="pixel-key">X</span>
+        <span class="hint-text">跳跃</span>
+        <span class="hint-sep">·</span>
+        <span class="pixel-key">C</span>
+        <span class="hint-text">冲刺</span>
       </p>
     </section>
 
