@@ -1302,129 +1302,109 @@
 
     // ── Particle Canvas ──
     (function() {
-      const canvas = document.getElementById('particle-canvas');
+      var canvas = document.getElementById('particle-canvas');
       if (!canvas) return;
-      const ctx = canvas.getContext('2d');
+      var ctx = canvas.getContext('2d');
 
-      let particles = [];
-      let width, height;
-      let incr = 0;
-      const PARTICLE_COUNT = 6000;
+      var particles = [];
+      var W = 0, H = 0;
+      var incr = 0;
+      var PARTICLE_COUNT = 6000;
+      var mouseX = 0;
 
-      class Particle {
-        constructor(x, y, c) {
-          this.posX = x;
-          this.posY = y;
-          this.c = c;
-        }
-        move() {
-          this.update();
-          this.wrap();
-          this.display();
-        }
-        update() {
-          incr += 0.008;
-          const theta = noise(this.posX * 0.006, this.posY * 0.004, incr) * Math.PI * 2;
-          this.posX += 2 * Math.cos(theta);
-          this.posY += 2 * Math.sin(theta);
-        }
-        display() {
-          const px = Math.floor(this.posX);
-          const py = Math.floor(this.posY);
-          if (px >= 0 && px < width && py >= 0 && py < height) {
-            ctx.fillStyle = this.c;
-            ctx.fillRect(px, py, 1, 1);
-          }
-        }
-        wrap() {
-          if (this.posX < 0) this.posX = width;
-          if (this.posX > width) this.posX = 0;
-          if (this.posY < 0) this.posY = height;
-          if (this.posY > height) this.posY = 0;
-        }
+      function Particle(x, y) {
+        this.x = x;
+        this.y = y;
       }
 
-      // Simple Perlin noise
+      Particle.prototype.update = function() {
+        incr += 0.008;
+        var theta = noise(this.x * 0.006, this.y * 0.004, incr) * Math.PI * 2;
+        this.x += 2 * Math.cos(theta);
+        this.y += 2 * Math.sin(theta);
+        if (this.x < 0) this.x = W;
+        if (this.x > W) this.x = 0;
+        if (this.y < 0) this.y = H;
+        if (this.y > H) this.y = 0;
+      };
+
+      // Perlin noise
       function noise(x, y, z) {
-        const p = [];
-        for (let i = 0; i < 256; i++) p[i] = Math.floor(Math.random() * 256);
-        const X = Math.floor(x) & 255;
-        const Y = Math.floor(y) & 255;
-        const Z = Math.floor(z) & 255;
-        const xf = x - Math.floor(x);
-        const yf = y - Math.floor(y);
-        const zf = z - Math.floor(z);
-        const u = xf * xf * (3 - 2 * xf);
-        const v = yf * yf * (3 - 2 * yf);
-        const w = zf * zf * (3 - 2 * zf);
-        const a = (p[X] + Y) & 255;
-        const b = (p[X + 1] + Y) & 255;
-        const aa = (p[a] + Z) & 255;
-        const ba = (p[b] + Z) & 255;
-        const ab = (p[a + 1] + Z) & 255;
-        const bb = (p[b + 1] + Z) & 255;
-        const lerp = function(t, a, b) { return a + t * (b - a); };
-        const x00 = lerp(u, (p[aa] & 255) / 255, (p[ba] & 255) / 255);
-        const x10 = lerp(u, (p[ab] & 255) / 255, (p[bb] & 255) / 255);
-        const x01 = lerp(u, (p[(p[X] + Y + 1) & 255] & 255) / 255, (p[(p[X + 1] + Y + 1) & 255] & 255) / 255);
-        const x11 = lerp(u, (p[(p[a] + 1 + Z) & 255] & 255) / 255, (p[(p[b] + 1 + Z) & 255] & 255) / 255);
-        const y0 = lerp(v, x00, x10);
-        const y1 = lerp(v, x01, x11);
+        var p = [];
+        for (var i = 0; i < 256; i++) p[i] = Math.floor(Math.random() * 256);
+        var X = Math.floor(x) & 255;
+        var Y = Math.floor(y) & 255;
+        var Z = Math.floor(z) & 255;
+        var xf = x - Math.floor(x);
+        var yf = y - Math.floor(y);
+        var zf = z - Math.floor(z);
+        var u = xf * xf * (3 - 2 * xf);
+        var v = yf * yf * (3 - 2 * yf);
+        var w = zf * zf * (3 - 2 * zf);
+        var a = (p[X] + Y) & 255;
+        var b = (p[X + 1] + Y) & 255;
+        var aa = (p[a] + Z) & 255;
+        var ba = (p[b] + Z) & 255;
+        var ab = (p[a + 1] + Z) & 255;
+        var bb = (p[b + 1] + Z) & 255;
+        var lerp = function(t, a, b) { return a + t * (b - a); };
+        var x00 = lerp(u, (p[aa] & 255) / 255, (p[ba] & 255) / 255);
+        var x10 = lerp(u, (p[ab] & 255) / 255, (p[bb] & 255) / 255);
+        var x01 = lerp(u, (p[(p[X] + Y + 1) & 255] & 255) / 255, (p[(p[X + 1] + Y + 1) & 255] & 255) / 255);
+        var x11 = lerp(u, (p[(p[a] + 1 + Z) & 255] & 255) / 255, (p[(p[b] + 1 + Z) & 255] & 255) / 255);
+        var y0 = lerp(v, x00, x10);
+        var y1 = lerp(v, x01, x11);
         return lerp(w, y0, y1);
       }
 
       function setParticles() {
         particles = [];
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-          const x = Math.random() * width;
-          const y = Math.random() * height;
-          const c = 'rgba(255,255,255,100)';
-          particles.push(new Particle(x, y, c));
+        for (var i = 0; i < PARTICLE_COUNT; i++) {
+          particles.push(new Particle(Math.random() * W, Math.random() * H));
         }
       }
 
       function resize() {
-        const rect = canvas.parentElement.getBoundingClientRect();
-        const projCard = canvas.previousElementSibling;
-        const projWidth = projCard ? projCard.offsetWidth : 400;
-        width = Math.max(rect.width - projWidth - 2, 200);
-        height = rect.height || 300;
-        canvas.width = width;
-        canvas.height = height;
-        canvas.style.width = width + 'px';
-        canvas.style.height = (rect.height || 300) + 'px';
+        var parent = canvas.parentElement;
+        var parentRect = parent.getBoundingClientRect();
+        var projCard = canvas.previousElementSibling;
+        var projW = projCard ? projCard.offsetWidth : 400;
+        W = Math.max(parentRect.width - projW - 2, 200);
+        H = parentRect.height || 300;
+        canvas.width = W;
+        canvas.height = H;
+        canvas.style.width = W + 'px';
+        canvas.style.height = H + 'px';
         ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, width, height);
+        ctx.fillRect(0, 0, W, H);
         setParticles();
       }
 
-      let mouseX = width / 2;
-
-      canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
+      canvas.addEventListener('mousemove', function(e) {
+        var rect = canvas.getBoundingClientRect();
         mouseX = e.clientX - rect.left;
       });
 
-      canvas.addEventListener('click', () => {
+      canvas.addEventListener('click', function() {
         setParticles();
         ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, width, height);
+        ctx.fillRect(0, 0, W, H);
       });
 
       function draw() {
-        const alpha = Math.min(35, Math.max(5, mouseX / width * 30 + 5));
-        ctx.fillStyle = `rgba(0,0,0,${alpha / 255})`;
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = 'rgba(255,255,255,100)';
+        var alpha = Math.min(35, Math.max(5, (mouseX || W/2) / W * 30 + 5));
+        ctx.fillStyle = 'rgba(0,0,0,' + (alpha / 255) + ')';
+        ctx.fillRect(0, 0, W, H);
 
-        const imgData = ctx.getImageData(0, 0, width, height);
-        const pixels = imgData.data;
-
-        for (let i = 0; i < particles.length; i++) {
-          particles[i].move();
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        for (var i = 0; i < particles.length; i++) {
+          particles[i].update();
+          var px = Math.floor(particles[i].x);
+          var py = Math.floor(particles[i].y);
+          if (px >= 0 && px < W && py >= 0 && py < H) {
+            ctx.fillRect(px, py, 1, 1);
+          }
         }
-
-        ctx.putImageData(imgData, 0, 0);
       }
 
       function loop() {
