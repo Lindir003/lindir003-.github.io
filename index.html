@@ -214,54 +214,23 @@
       line-height: 0.9;
       color: var(--text-primary);
       margin-bottom: 32px;
-      position: relative;
-      animation: glitch-main 4s infinite;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
-    .hero-name::before,
-    .hero-name::after {
-      content: 'Zijian';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    .typewriter-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: var(--text-primary);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: cursor-blink 0.8s step-end infinite;
     }
 
-    .hero-name::before {
-      color: #ff3c3c;
-      animation: glitch-top 4s infinite;
-      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    }
-
-    .hero-name::after {
-      color: #00ffff;
-      animation: glitch-bottom 4s infinite;
-      clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-    }
-
-    @keyframes glitch-main {
-      0%, 90%, 100% { transform: none; }
-      91% { transform: translate(-2px, 1px); }
-      92% { transform: translate(2px, -1px); }
-      93% { transform: translate(-1px, 2px); }
-      94% { transform: none; }
-    }
-
-    @keyframes glitch-top {
-      0%, 90%, 100% { transform: none; opacity: 0; }
-      91% { transform: translate(-3px, 0); opacity: 0.8; }
-      92% { transform: translate(3px, 0); opacity: 0; }
-      93% { transform: translate(-1px, -1px); opacity: 0.8; }
-      94% { transform: none; opacity: 0; }
-    }
-
-    @keyframes glitch-bottom {
-      0%, 90%, 100% { transform: none; opacity: 0; }
-      91% { transform: translate(3px, 0); opacity: 0.8; }
-      92% { transform: translate(-3px, 0); opacity: 0; }
-      93% { transform: translate(1px, 1px); opacity: 0.8; }
-      94% { transform: none; opacity: 0; }
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
     .hero-role {
@@ -1316,6 +1285,28 @@
     });
 
     window.dispatchEvent(new Event('scroll'));
+
+    // ── Typewriter effect for hero name ──
+    (function() {
+      var nameEl = document.querySelector('.hero-name');
+      if (!nameEl) return;
+      var name = 'Zijian';
+      var cursor = document.createElement('span');
+      cursor.className = 'typewriter-cursor';
+      nameEl.textContent = '';
+      nameEl.appendChild(cursor);
+
+      var i = 0;
+      var speed = 120;
+      function type() {
+        if (i < name.length) {
+          nameEl.insertBefore(document.createTextNode(name.charAt(i)), cursor);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      setTimeout(type, 600);
+    })();
 
     // Fallback: reveal sections after 500ms
     setTimeout(function() {
