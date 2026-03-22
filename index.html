@@ -704,6 +704,128 @@
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+
+    /* Game cover - click to play */
+    .game-cover-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .game-cover {
+      position: relative;
+      width: 100%;
+      max-width: 840px;
+      height: 500px;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .game-cover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 60px rgba(168,85,247,0.2);
+    }
+
+    .game-cover-img {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* Pixel mountain silhouette */
+    .game-cover-mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background:
+        linear-gradient(135deg, transparent 40%, #1a1a2e 40%, #1a1a2e 42%, transparent 42%),
+        linear-gradient(225deg, transparent 50%, #16213e 50%, #16213e 53%, transparent 53%),
+        linear-gradient(160deg, transparent 30%, #0f3460 30%, #0f3460 34%, transparent 34%);
+      background-size: 200px 200px, 300px 300px, 250px 250px;
+      background-position: bottom left, bottom right, bottom center;
+      opacity: 0.8;
+    }
+
+    /* CRT scanline overlay */
+    .game-cover-texture {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.1) 0px,
+        rgba(0,0,0,0.1) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+    }
+
+    .game-cover-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(
+        to bottom,
+        rgba(5,5,7,0.3) 0%,
+        rgba(5,5,7,0.1) 40%,
+        rgba(5,5,7,0.5) 100%
+      );
+      transition: background 0.3s ease;
+    }
+
+    .game-cover:hover .game-cover-overlay {
+      background: linear-gradient(
+        to bottom,
+        rgba(5,5,7,0.4) 0%,
+        rgba(5,5,7,0.2) 40%,
+        rgba(5,5,7,0.6) 100%
+      );
+    }
+
+    .game-play-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: rgba(168, 85, 247, 0.9);
+      border-radius: 50px;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .game-cover:hover .game-play-btn {
+      background: rgba(168, 85, 247, 1);
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+    }
+
+    .game-cover-title {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      color: white;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+      margin-bottom: 8px;
+    }
+
+    .game-cover-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.1em;
+    }
+
+    .monitor-bezel { display: none; }
+    .pixel-deco { margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -909,13 +1031,24 @@
             <span class="monitor-power">PWR</span>
           </div>
         </div>
-        <div class="game-iframe-wrap">
-          <iframe
-            src="https://maddymakesgamesinc.itch.io/celesteclassic/embed"
-            allow="gamepad; fullscreen"
-            scrolling="no"
-          ></iframe>
-        </div>
+        <a href="https://maddymakesgamesinc.itch.io/celesteclassic" target="_blank" class="game-cover-link">
+          <div class="game-cover">
+            <div class="game-cover-img" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
+              <div class="game-cover-mountains"></div>
+              <div class="game-cover-texture"></div>
+            </div>
+            <div class="game-cover-overlay">
+              <div class="game-play-btn">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                  <path d="M8 5v14l11-7z" fill="currentColor"/>
+                </svg>
+                <span>PLAY</span>
+              </div>
+              <p class="game-cover-title">CELESTE CLASSIC</p>
+              <p class="game-cover-sub">PICO-8 · 爬上山去</p>
+            </div>
+          </div>
+        </a>
       </div>
 
       <div class="pixel-deco">
