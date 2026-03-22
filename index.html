@@ -441,6 +441,26 @@
       display: block;
     }
 
+    .projects-with-canvas {
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+    }
+
+    .projects-with-canvas .project-card {
+      flex: 0 0 auto;
+      width: 400px;
+    }
+
+    .particle-canvas {
+      flex: 1;
+      min-height: 300px;
+      height: 100%;
+      background: #000;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
     .project-card:hover {
       border-color: var(--border-strong);
       z-index: 1;
@@ -990,6 +1010,19 @@
         height: 280px;
       }
 
+      .projects-with-canvas {
+        flex-direction: column;
+      }
+
+      .projects-with-canvas .project-card {
+        width: 100%;
+      }
+
+      .particle-canvas {
+        width: 100%;
+        height: 200px;
+      }
+
       footer {
         flex-direction: column;
         gap: 16px;
@@ -1111,7 +1144,7 @@
       <p class="section-desc">
         Research and engineering projects. Recording the journey of exploration.
       </p>
-      <div class="projects-grid">
+      <div class="projects-grid projects-with-canvas">
         <a href="https://youtu.be/iTNHC8lpQwo" target="_blank" class="project-card project-link-card">
           <img src="img/projects/2.jpg" alt="My Video" class="project-img" />
           <div class="project-info">
@@ -1119,6 +1152,7 @@
             <div class="project-desc">SILENT MATURITY</div>
           </div>
         </a>
+        <canvas id="particle-canvas" class="particle-canvas"></canvas>
       </div>
     </div>
   </section>
@@ -1258,6 +1292,143 @@
         card.style.transform = '';
       });
     });
+
+    // ── Particle Canvas ──
+    (function() {
+      const canvas = document.getElementById('particle-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      let particles = [];
+      let width, height;
+      let incr = 0;
+      const PARTICLE_COUNT = 6000;
+
+      class Particle {
+        constructor(x, y, c) {
+          this.posX = x;
+          this.posY = y;
+          this.c = c;
+        }
+        move() {
+          this.update();
+          this.wrap();
+          this.display();
+        }
+        update() {
+          incr += 0.008;
+          const theta = noise(this.posX * 0.006, this.posY * 0.004, incr) * Math.PI * 2;
+          this.posX += 2 * Math.cos(theta);
+          this.posY += 2 * Math.sin(theta);
+        }
+        display() {
+          const px = Math.floor(this.posX);
+          const py = Math.floor(this.posY);
+          if (px >= 0 && px < width && py >= 0 && py < height) {
+            ctx.fillStyle = this.c;
+            ctx.fillRect(px, py, 1, 1);
+          }
+        }
+        wrap() {
+          if (this.posX < 0) this.posX = width;
+          if (this.posX > width) this.posX = 0;
+          if (this.posY < 0) this.posY = height;
+          if (this.posY > height) this.posY = 0;
+        }
+      }
+
+      // Simple Perlin noise
+      function noise(x, y, z) {
+        const p = [];
+        for (let i = 0; i < 256; i++) p[i] = Math.floor(Math.random() * 256);
+        const X = Math.floor(x) & 255;
+        const Y = Math.floor(y) & 255;
+        const Z = Math.floor(z) & 255;
+        const xf = x - Math.floor(x);
+        const yf = y - Math.floor(y);
+        const zf = z - Math.floor(z);
+        const u = xf * xf * (3 - 2 * xf);
+        const v = yf * yf * (3 - 2 * yf);
+        const w = zf * zf * (3 - 2 * zf);
+        const a = (p[X] + Y) & 255;
+        const b = (p[X + 1] + Y) & 255;
+        const aa = (p[a] + Z) & 255;
+        const ba = (p[b] + Z) & 255;
+        const ab = (p[a + 1] + Z) & 255;
+        const bb = (p[b + 1] + Z) & 255;
+        const lerp = (t, a, b) => a + t * (b - a);
+        return lerp(w,
+          lerp(v, lerp(u, (p[aa] & 255) / 255, (p[ba] & 255) / 255),
+                   lerp(u, (p[ab] & 255) / 255, (p[bb] & 255) / 255)),
+          lerp(v, lerp(u, (p[(p[X] + Y + 1) & 255] & 255) / 255, (p[(p[X + 1] + Y + 1) & 255] & 255) / 255),
+                   lerp(u, (p[(p[a] + 1 + Z) & 255] & 255) / 255, (p[(p[b] + 1 + Z) & 255] & 255) / 255))
+          )
+        );
+      }
+
+      function setParticles() {
+        particles = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const x = Math.random() * width;
+          const y = Math.random() * height;
+          const c = 'rgba(255,255,255,100)';
+          particles.push(new Particle(x, y, c));
+        }
+      }
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const projCard = canvas.previousElementSibling;
+        const projWidth = projCard ? projCard.offsetWidth : 400;
+        width = Math.max(rect.width - projWidth - 2, 200);
+        height = rect.height || 300;
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = width + 'px';
+        canvas.style.height = (rect.height || 300) + 'px';
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, width, height);
+        setParticles();
+      }
+
+      let mouseX = width / 2;
+
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+      });
+
+      canvas.addEventListener('click', () => {
+        setParticles();
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, width, height);
+      });
+
+      function draw() {
+        const alpha = Math.min(35, Math.max(5, mouseX / width * 30 + 5));
+        ctx.fillStyle = `rgba(0,0,0,${alpha / 255})`;
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = 'rgba(255,255,255,100)';
+
+        const imgData = ctx.getImageData(0, 0, width, height);
+        const pixels = imgData.data;
+
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].move();
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+      }
+
+      function loop() {
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+      loop();
+    })();
   </script>
 
 </body>
