@@ -1269,6 +1269,13 @@
 
     window.dispatchEvent(new Event('scroll'));
 
+    // Fallback: reveal sections after 500ms
+    setTimeout(function() {
+      document.querySelectorAll('[data-animate]').forEach(function(el) {
+        el.classList.add('visible');
+      });
+    }, 500);
+
     // ── Nav link smooth scroll ──
     document.querySelectorAll('.nav-links a, .footer-back').forEach(link => {
       link.addEventListener('click', (e) => {
@@ -1356,14 +1363,14 @@
         const ba = (p[b] + Z) & 255;
         const ab = (p[a + 1] + Z) & 255;
         const bb = (p[b + 1] + Z) & 255;
-        const lerp = (t, a, b) => a + t * (b - a);
-        return lerp(w,
-          lerp(v, lerp(u, (p[aa] & 255) / 255, (p[ba] & 255) / 255),
-                   lerp(u, (p[ab] & 255) / 255, (p[bb] & 255) / 255)),
-          lerp(v, lerp(u, (p[(p[X] + Y + 1) & 255] & 255) / 255, (p[(p[X + 1] + Y + 1) & 255] & 255) / 255),
-                   lerp(u, (p[(p[a] + 1 + Z) & 255] & 255) / 255, (p[(p[b] + 1 + Z) & 255] & 255) / 255))
-          )
-        );
+        const lerp = function(t, a, b) { return a + t * (b - a); };
+        const x00 = lerp(u, (p[aa] & 255) / 255, (p[ba] & 255) / 255);
+        const x10 = lerp(u, (p[ab] & 255) / 255, (p[bb] & 255) / 255);
+        const x01 = lerp(u, (p[(p[X] + Y + 1) & 255] & 255) / 255, (p[(p[X + 1] + Y + 1) & 255] & 255) / 255);
+        const x11 = lerp(u, (p[(p[a] + 1 + Z) & 255] & 255) / 255, (p[(p[b] + 1 + Z) & 255] & 255) / 255);
+        const y0 = lerp(v, x00, x10);
+        const y1 = lerp(v, x01, x11);
+        return lerp(w, y0, y1);
       }
 
       function setParticles() {
