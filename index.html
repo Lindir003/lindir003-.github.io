@@ -466,7 +466,195 @@
       z-index: 1;
     }
 
-    /* ── Responsive ── */
+    /* ═══════════════════════════════════════════
+       PIXEL GAMES SECTION — Retro CRT aesthetic
+    ═══════════════════════════════════════════ */
+    .games-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .games-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .games-header h2 {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #f97316 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      font-family: 'Courier New', monospace;
+      text-transform: uppercase;
+    }
+
+    .games-header p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* CRT Monitor Frame */
+    .crt-monitor {
+      position: relative;
+      background: #111;
+      border: 3px solid #222;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow:
+        0 0 0 4px #1a1a1a,
+        0 0 0 8px #0a0a0a,
+        0 30px 60px rgba(0,0,0,0.5),
+        inset 0 0 30px rgba(0,0,0,0.5);
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* Scanlines overlay */
+    .crt-monitor::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 10;
+      border-radius: 8px;
+    }
+
+    /* CRT curvature glow */
+    .crt-monitor::after {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border-radius: 8px;
+      box-shadow: inset 0 0 80px rgba(168, 85, 247, 0.15);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .monitor-bezel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 8px 16px;
+      background: #1a1a1a;
+      border-radius: 10px;
+    }
+
+    .monitor-ports {
+      display: flex;
+      gap: 6px;
+    }
+
+    .monitor-led {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      animation: led-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes led-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .monitor-power {
+      font-size: 11px;
+      color: #444;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.1em;
+    }
+
+    .game-iframe-wrap {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .game-iframe-wrap iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      display: block;
+    }
+
+    /* Pixel art decorative elements */
+    .pixel-deco {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .pixel-heart, .pixel-star, .pixel-coin {
+      width: 20px;
+      height: 20px;
+      position: relative;
+      animation: pixel-bounce 1s ease-in-out infinite;
+    }
+
+    .pixel-heart {
+      background: #ef4444;
+      clip-path: polygon(50% 0%, 100% 35%, 100% 70%, 50% 100%, 0% 70%, 0% 35%);
+      animation-delay: 0s;
+    }
+
+    .pixel-star {
+      background: #eab308;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation-delay: 0.2s;
+    }
+
+    .pixel-coin {
+      background: #f97316;
+      border-radius: 50%;
+      animation-delay: 0.4s;
+    }
+
+    @keyframes pixel-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .game-hint {
+      text-align: center;
+      margin-top: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #555;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .game-hint span {
+      color: var(--neon-purple);
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
     @media (max-width: 768px) {
       nav {
         padding: 20px 24px;
@@ -492,6 +680,29 @@
         width: 220px;
         height: 300px;
       }
+
+      .game-iframe-wrap iframe {
+        height: 350px;
+      }
+    }
+
+    /* Games section animations */
+    .games-header {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .crt-monitor {
+      opacity: 0;
+      transform: translateY(40px) scale(0.97);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+    }
+
+    .games-header.visible,
+    .crt-monitor.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
   </style>
 </head>
@@ -511,6 +722,7 @@
       <li><a href="#about">关于</a></li>
       <li><a href="#skills">技能</a></li>
       <li><a href="#projects">项目</a></li>
+      <li><a href="#games">游戏</a></li>
       <li><a href="#contact">联系</a></li>
     </ul>
   </nav>
@@ -676,6 +888,47 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- Games -->
+    <section class="games-section" id="games">
+      <div class="games-header" data-animate>
+        <h2>Pixel Playground</h2>
+        <p>// 爬山的Madeline</p>
+      </div>
+
+      <div class="crt-monitor" data-animate>
+        <div class="monitor-bezel">
+          <div class="monitor-ports">
+            <div style="width:8px;height:8px;background:#333;border-radius:2px;"></div>
+            <div style="width:8px;height:8px;background:#333;border-radius:2px;"></div>
+            <div style="width:8px;height:8px;background:#333;border-radius:2px;"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="monitor-led"></div>
+            <span class="monitor-power">PWR</span>
+          </div>
+        </div>
+        <div class="game-iframe-wrap">
+          <iframe
+            src="https://maddymakesgamesinc.itch.io/celesteclassic/embed"
+            allow="gamepad; fullscreen"
+            scrolling="no"
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="pixel-deco">
+        <div class="pixel-heart"></div>
+        <div class="pixel-star"></div>
+        <div class="pixel-coin"></div>
+        <div class="pixel-star"></div>
+        <div class="pixel-heart"></div>
+      </div>
+
+      <p class="game-hint">
+        <span>↑↓←→</span> 移动 &nbsp;·&nbsp; <span>X</span> 跳跃 &nbsp;·&nbsp; <span>C</span> 冲刺
+      </p>
     </section>
 
   </div>
