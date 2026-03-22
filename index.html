@@ -475,6 +475,17 @@
       width: 400px;
     }
 
+    .projects-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 2px;
+    }
+
+    .projects-row .project-card {
+      width: 100%;
+    }
+
     .project-media-wrap {
       position: relative;
       width: 100%;
@@ -483,16 +494,32 @@
 
     .project-video {
       position: absolute;
-      inset: 0;
-      width: 100%;
+      top: 0;
+      right: 0;
+      width: 50%;
       height: 100%;
       object-fit: cover;
       filter: grayscale(100%);
     }
 
+    .project-img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .projects-row .project-media-wrap {
+      height: 280px;
+    }
+
+    .projects-row .project-card {
+      display: flex;
+      flex-direction: row;
+    }
+
     .project-media-overlay {
       position: absolute;
       inset: 0;
+      width: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1071,8 +1098,27 @@
         width: 100%;
       }
 
-      .project-with-video {
-        height: 240px;
+      .projects-row {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-row .project-card {
+        flex-direction: column;
+      }
+
+      .projects-row .project-media-wrap {
+        height: 200px;
+      }
+
+      .projects-row .project-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .projects-row .project-media-overlay {
+        width: 100%;
       }
 
       .particle-canvas {
@@ -1209,6 +1255,10 @@
             <div class="project-desc">SILENT MATURITY</div>
           </div>
         </a>
+        <canvas id="particle-canvas" class="particle-canvas"></canvas>
+      </div>
+
+      <div class="projects-row">
         <a href="https://youtu.be/pec4bdcG03c" target="_blank" class="project-card project-link-card project-with-video">
           <div class="project-media-wrap">
             <img src="img/projects/9772226be9f2c0d0cf2a28c1b3a40f5b.jpg" alt="Project 2" class="project-img" />
@@ -1219,7 +1269,6 @@
             </div>
           </div>
         </a>
-        <canvas id="particle-canvas" class="particle-canvas"></canvas>
       </div>
     </div>
   </section>
