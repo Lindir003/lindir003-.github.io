@@ -1301,7 +1301,7 @@
         entries.forEach(function(entry) {
           if (entry.isIntersecting && !typedTitles.has(entry.target)) {
             typedTitles.add(entry.target);
-            typewriterElement(entry.target);
+            humanTypeElement(entry.target);
           }
         });
       }, { threshold: 0.5 });
@@ -1310,20 +1310,45 @@
         observer.observe(el);
       });
 
-      function typewriterElement(el) {
+      function humanTypeElement(el) {
         var text = el.getAttribute('data-typewriter') || el.textContent;
         el.textContent = '';
         el.style.visibility = 'visible';
+
         var i = 0;
-        var speed = 60;
-        function type() {
+        var typing = true;
+
+        function typeNext() {
+          if (!typing) return;
           if (i < text.length) {
             el.textContent += text.charAt(i);
             i++;
-            setTimeout(type, speed);
+            var delay;
+            if (text.charAt(i - 1) === ' ') {
+              delay = 80 + Math.random() * 120;
+            } else if (',.!?'.indexOf(text.charAt(i - 1)) !== -1) {
+              delay = 150 + Math.random() * 200;
+            } else {
+              delay = 50 + Math.random() * 100;
+            }
+            setTimeout(typeNext, delay);
+          } else {
+            setTimeout(deleteChars, 5000);
           }
         }
-        type();
+
+        function deleteChars() {
+          if (!typing) return;
+          if (el.textContent.length > 0) {
+            el.textContent = el.textContent.slice(0, -1);
+            setTimeout(deleteChars, 40 + Math.random() * 60);
+          } else {
+            i = 0;
+            setTimeout(typeNext, 800);
+          }
+        }
+
+        typeNext();
       }
     })();
 
