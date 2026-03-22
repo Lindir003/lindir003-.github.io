@@ -1319,9 +1319,14 @@
 
       Particle.prototype.update = function() {
         incr += 0.008;
-        var theta = noise(this.x * 0.006, this.y * 0.004, incr) * Math.PI * 2;
-        this.x += 2 * Math.cos(theta);
-        this.y += 2 * Math.sin(theta);
+        var theta = noise(this.x * 0.003, this.y * 0.002, incr) * Math.PI * 2;
+        var speed = 1.5 + Math.random() * 1.5;
+        // Overall drift to the left
+        this.x += Math.cos(theta) * speed - 0.8;
+        this.y += Math.sin(theta) * speed * 0.6;
+        // Add subtle turbulence
+        this.x += (Math.random() - 0.5) * 0.5;
+        this.y += (Math.random() - 0.5) * 0.3;
         if (this.x < 0) this.x = W;
         if (this.x > W) this.x = 0;
         if (this.y < 0) this.y = H;
@@ -1401,8 +1406,8 @@
           particles[i].update();
           var px = Math.floor(particles[i].x);
           var py = Math.floor(particles[i].y);
-          if (px >= 0 && px < W && py >= 0 && py < H) {
-            ctx.fillRect(px, py, 1, 1);
+          if (px >= 0 && px < W - 1 && py >= 0 && py < H - 1) {
+            ctx.fillRect(px, py, 2, 2);
           }
         }
       }
